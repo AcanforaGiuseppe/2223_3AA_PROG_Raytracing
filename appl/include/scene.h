@@ -3,7 +3,9 @@
 #include "SDL.h"
 
 typedef struct {
-    int todo;
+    int width;
+    int height;
+    SDL_Renderer* renderer;
 } scene_t;
 
 scene_t* scene_create(int w, int h, SDL_Renderer*);
