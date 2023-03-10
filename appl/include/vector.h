@@ -59,3 +59,10 @@ static vector3_t vector3_mult(vector3_t* v1, float scalar)
     r.z = v1->z * scalar;
     return r;
 }
+
+static vector3_t vector3_refl(vector3_t* v, vector3_t* n)
+{
+    float dot2 = 2.f * vector3_dot(v, n);
+    vector3_t dot2norm = vector3_mult(n, dot2);
+    return vector3_sub(v, &dot2norm);
+}

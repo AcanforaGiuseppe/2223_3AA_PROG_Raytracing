@@ -10,18 +10,24 @@ scene_t* scene_create(int screen_width, int screen_height, SDL_Renderer* r) {
     s.height = screen_height;
     s.sphere_count = 2;
 
-    s.spheres[0].center = (vector3_t){-2.f, 0.f, -5.f};
+    s.spheres[0].center = (vector3_t){-1.f, 0.f, -5.f};
     s.spheres[0].radius = 1.3f;
-    s.spheres[0].color = (color_t){1.f, 0, 0};
+    s.spheres[0].material.albedo = (color_t){1.f, 0, 0};
+    s.spheres[0].material.specular_shiness_factor = 50.f;
+    s.spheres[0].material.reflect_factor = 0.f;
 
-    s.spheres[1].center = (vector3_t){2.f, 0.f, -5.f};
+    s.spheres[1].center = (vector3_t){1.4f, 0.5f, -5.f};
     s.spheres[1].radius = 1.f;
-    s.spheres[1].color = (color_t){0.f, 1, 0};
+    s.spheres[1].material.albedo = (color_t){0.f, 1, 0};
+    s.spheres[1].material.specular_shiness_factor = 20.f;
+    s.spheres[1].material.reflect_factor = 1.f;
 
     s.bg_color = (color_t){0.f, 0, 0};
 
-    s.light.direction = (vector3_t){0, -1, 0};
-    s.light.color = (color_t){0.f, 0, 1};
+    s.light.direction = (vector3_t){0, -1, -1};
+    s.light.direction = vector3_norm(&s.light.direction);
+    s.light.color = (color_t){1.f, 1, 1};
+    s.light.intensity = 0.5;
 
     s.renderer = r;
     return &s;
@@ -61,7 +67,7 @@ void scene_update(scene_t* s, float delta_time) {
             ray.origin = &camera_position;
             ray.direction = &ray_dir;
 
-            color_t c = ray_trace(&ray, s);
+            color_t c = ray_trace(&ray, s, 1);
 
             SDL_SetRenderDrawColor(s->renderer, c.r * 255.f, c.g * 255.f, c.b * 255.f, 255);
             SDL_RenderDrawPoint(s->renderer, w, h);

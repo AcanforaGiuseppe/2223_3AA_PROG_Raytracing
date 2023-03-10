@@ -24,6 +24,6 @@ typedef enum
 } raycast_strategy_e;
 
 
-color_t ray_trace(ray_t* ray, scene_t* s);
+color_t ray_trace(ray_t* ray, scene_t* s, int current_depth);
 
 

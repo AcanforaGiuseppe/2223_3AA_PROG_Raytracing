@@ -73,8 +73,10 @@ static bool ray_cast(ray_t* ray, scene_t* s, rayhit_t* out, raycast_strategy_e s
     return has_best_hit;
 }
 
-color_t ray_trace(ray_t* ray, scene_t* s) 
+color_t ray_trace(ray_t* ray, scene_t* s, int current_depth) 
 {
+    if (current_depth > 3) return s->bg_color;
+
     //Primary Ray
     rayhit_t hit;
     bool has_hit = ray_cast(ray, s, &hit, RAYCAST_BEST); 
@@ -99,14 +101,17 @@ color_t ray_trace(ray_t* ray, scene_t* s)
     sphere_t* object = hit.object;
 
     float ambient_factor = 0.1f;
-    color_t ambient = color_mult_scalar(&object->color, ambient_factor);
+    color_t ambient = color_mult_scalar(&object->material.albedo, ambient_factor);
 
     if (shadow_has_hit) return ambient;
 
     //Diffuse
     float lambert = fmaxf(0.f, vector3_dot(&inverted_light_dir, &hit.normal));
-    color_t diffuse = color_mult_scalar(&object->color, lambert);
+    lambert *= (1.f - object->material.reflect_factor);
+    //color_t diffuse = color_mult_scalar(&object->material.albedo, lambert);
     //diffuse = color_add(&diffuse, &s->light.color);
+    color_t diffuse_light = color_mult_scalar(&s->light.color, lambert * s->light.intensity);
+    color_t diffuse = color_add(&object->material.albedo, &diffuse_light);
 
     //Specular
     vector3_t L = inverted_light_dir;
@@ -117,7 +122,7 @@ color_t ray_trace(ray_t* ray, scene_t* s)
     H = vector3_norm(&H);
 
     float specular_strength = fmaxf(0, vector3_dot(&hit.normal, &H));
-    float specular_intesity = powf(specular_strength, 50.f);
+    float specular_intesity = powf(specular_strength, object->material.specular_shiness_factor);
     color_t specular = color_mult_scalar(&s->light.color, specular_intesity);
     
     color_t phong = (color_t){0,0,0};
@@ -125,6 +130,21 @@ color_t ray_trace(ray_t* ray, scene_t* s)
     phong = color_add(&phong, &diffuse);
     phong = color_add(&phong, &specular);
 
-    phong = color_clamp(&phong);
-    return phong;
+    color_t final_color = phong;
+    if (object->material.reflect_factor > 0) 
+    {
+        ray_t secondary_ray;
+        vector3_t refl_vect = vector3_refl(ray->direction, &hit.normal);
+
+        secondary_ray.origin = &biased_hit_point;
+        secondary_ray.direction = &refl_vect;
+
+        color_t refl_color = ray_trace(&secondary_ray, s, current_depth + 1);
+        refl_color = color_mult_scalar(&refl_color, object->material.reflect_factor);
+
+        final_color = color_add(&final_color, &refl_color);
+    }
+
+    final_color = color_clamp(&final_color);
+    return final_color;
 }
