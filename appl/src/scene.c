@@ -8,15 +8,20 @@ scene_t* scene_create(int screen_width, int screen_height, SDL_Renderer* r) {
     static scene_t s;
     s.width = screen_width;
     s.height = screen_height;
-    s.sphere_count = 1;
-    s.spheres[0].center = (vector3_t){0.f, 0.f, -5.f};
-    s.spheres[0].radius = 2.f;
+    s.sphere_count = 2;
+
+    s.spheres[0].center = (vector3_t){-2.f, 0.f, -5.f};
+    s.spheres[0].radius = 1.3f;
     s.spheres[0].color = (color_t){1.f, 0, 0};
+
+    s.spheres[1].center = (vector3_t){2.f, 0.f, -5.f};
+    s.spheres[1].radius = 1.f;
+    s.spheres[1].color = (color_t){0.f, 1, 0};
 
     s.bg_color = (color_t){0.f, 0, 0};
 
     s.light.direction = (vector3_t){0, -1, 0};
-    s.light.color = (color_t){1.f, 1, 1};
+    s.light.color = (color_t){0.f, 0, 1};
 
     s.renderer = r;
     return &s;

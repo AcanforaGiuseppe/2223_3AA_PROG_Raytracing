@@ -19,7 +19,7 @@ typedef struct {
     int width;
     int height;
     SDL_Renderer* renderer;
-    sphere_t spheres[1];
+    sphere_t spheres[2];
     int sphere_count;
     color_t bg_color;
     light_t light;
