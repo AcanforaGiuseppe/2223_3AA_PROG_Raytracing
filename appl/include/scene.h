@@ -4,11 +4,13 @@
 #include "vector.h"
 #include "color.h"
 
-typedef struct {
+typedef struct
+{
     vector3_t center;
     float radius;
 
-    struct {
+    struct
+    {
         color_t albedo;
         color_t specular_color;
         float specular_shiness_factor;
@@ -17,13 +19,15 @@ typedef struct {
 
 } sphere_t;
 
-typedef struct {
+typedef struct
+{
     vector3_t direction;
     color_t color;
     float intensity;
 } light_t;
 
-typedef struct {
+typedef struct
+{
     int width;
     int height;
     SDL_Renderer* renderer;

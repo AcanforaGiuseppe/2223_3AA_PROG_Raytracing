@@ -5,12 +5,14 @@
 
 //typedef struct scene_t scene_t;
 
-typedef struct {
+typedef struct
+{
     vector3_t* origin;
     vector3_t* direction;
 } ray_t;
 
-typedef struct {
+typedef struct
+{
     vector3_t point;
     vector3_t normal;
     sphere_t* object;
@@ -23,7 +25,4 @@ typedef enum
     RAYCAST_FIRST
 } raycast_strategy_e;
 
-
 color_t ray_trace(ray_t* ray, scene_t* s, int current_depth);
-
-
