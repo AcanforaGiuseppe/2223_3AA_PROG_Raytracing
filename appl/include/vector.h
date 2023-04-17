@@ -1,7 +1,8 @@
 #pragma once 
 #include "math.h"
 
-typedef struct {
+typedef struct
+{
     float x;
     float y;
     float z;
@@ -13,6 +14,7 @@ static vector3_t vector3_sub(vector3_t* v1, vector3_t* v2)
     r.x = v1->x - v2->x;
     r.y = v1->y - v2->y;
     r.z = v1->z - v2->z;
+
     return r;
 }
 
@@ -34,6 +36,7 @@ static vector3_t vector3_norm(vector3_t* v)
     r.x = v->x / magn;
     r.y = v->y / magn;
     r.z = v->z / magn;
+
     return r;
 }
 
@@ -48,6 +51,7 @@ static vector3_t vector3_sum(vector3_t* v1, vector3_t* v2)
     r.x = v1->x + v2->x;
     r.y = v1->y + v2->y;
     r.z = v1->z + v2->z;
+
     return r;
 }
 
@@ -57,6 +61,7 @@ static vector3_t vector3_mult(vector3_t* v1, float scalar)
     r.x = v1->x * scalar;
     r.y = v1->y * scalar;
     r.z = v1->z * scalar;
+
     return r;
 }
 
@@ -64,5 +69,6 @@ static vector3_t vector3_refl(vector3_t* v, vector3_t* n)
 {
     float dot2 = 2.f * vector3_dot(v, n);
     vector3_t dot2norm = vector3_mult(n, dot2);
+    
     return vector3_sub(v, &dot2norm);
 }
